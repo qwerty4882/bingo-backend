@@ -2,7 +2,7 @@ const PORT = process.env.PORT ||4000
 
 const io = require('socket.io')(PORT, {
   cors: {
-    origin: ['http://localhost:3000'],
+    origin: ['https://bingoonline.netlify.app/'],
   },
 })
 io.on('connection', (socket) => {
