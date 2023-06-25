@@ -1,8 +1,6 @@
-const PORT = process.env.PORT ||4000
-
-const io = require('socket.io')(PORT, {
+const io = require('socket.io')(4000, {
   cors: {
-    origin: ['http://localhost:3000','https://bingoonline.netlify.app'],
+    origin: ['http://localhost:3000'],
   },
 })
 io.on('connection', (socket) => {
@@ -29,6 +27,17 @@ io.on('connection', (socket) => {
     }
   })
   socket.on('leave-room', (room) => {
-    socket.leave(room)
+    const roomName = room
+    const roomSockets = io.sockets.adapter.rooms.get(roomName)
+
+    if (roomSockets) {
+      const socketIds = Array.from(roomSockets)
+      socketIds.forEach((socketId) => {
+        const socket = io.sockets.sockets.get(socketId)
+        if (socket) {
+          socket.leave(roomName)
+        }
+      })
+    }
   })
 })
